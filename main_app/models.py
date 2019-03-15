@@ -1,6 +1,13 @@
 from django.db import models
 from djmoney.models.fields import MoneyField
 from django.contrib.auth.models import User
+
+import urllib3
+import xml
+
+skyscanner_api = 'prtl6749387986743898559646983194'
+url = 'http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0/FR/eur/en-US/uk/us/anytime/anytime?apikey=prtl6749387986743898559646983194'
+
 # Create your models here.
 
 class Airport(models.Model):
@@ -24,3 +31,58 @@ class Hotel(models.Model):
     address = models.CharField(max_length = 250)
     check_in = models.DateField ()
     check_out = models.DateField ()
+    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
+
+    def __str__(self):
+        return f"{self.name} // {self.price}"
+
+class Trip(models.Model):
+    # base_city = models.ForeignKey(Airport, on_delete=models.CASCADE)
+    budget = models.IntegerField()
+    # hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
+    # destination = models.ForeignKey(Destination, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"budget: ${self.budget}"
+
+class Restaurant(models.Model):
+    name = models.CharField(max_length =  250)
+    address = models.CharField(max_length =  250)
+    cuisine = models.CharField(max_length =  250)
+    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
+    date_time = models.DateTimeField()
+    # trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.name} // {self.price}"
+
+class Event (models.Model):
+    name = models.CharField(max_length =  250)
+    address = models.CharField(max_length =  250)
+    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
+    date_time = models.DateTimeField()
+    # trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.name} // {self.price}"
+
+class Attraction (models.Model):
+    name = models.CharField(max_length =  250)
+    address =  models.CharField(max_length =  250)
+    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
+    date_time = models.DateTimeField()
+    # trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.name} // {self.price}"
+
+class DressCode(models.Model):
+    type = models.CharField(max_length = 250)
+
+    def __str__(self):
+        return self.type
+    
+
+
+
