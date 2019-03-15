@@ -11,7 +11,7 @@
 <form method="post" action="{% url 'signup' %}">
   {% csrf_token %}
   {{ form|crispy }}
-  <input type="submit" class="btn btn-success" value="Sign Up">
+  <input type="submit" class="btn btn-outline-success" value="Sign Up">
 </form>
 </div>
 {% endblock %}
