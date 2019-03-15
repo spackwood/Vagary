@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div style="width: 50%; margin: 0 auto;">
+
+
+    <i class="fa fa-vcard-o" style="font-size:48px;color:green"></i>
+
+{% if error_message %}<p class="red-text">{{ error_message }}</p>{% endif %}
+
+<form method="post" action="{% url 'signup' %}">
+  {% csrf_token %}
+  {{ form|crispy }}
+  <input type="submit" class="btn btn-success" value="Sign Up">
+</form>
+</div>
+{% endblock %}

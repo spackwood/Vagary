@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div style="width: 50%; margin: 0 auto;">
+
+        <i class="fa fa-sign-in" style="font-size:48px;color:green"></i>
+<form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit"value="Sign In" class="btn btn-success">
+    <input type="hidden" name="next" value="{{ next }}">
+</form>
+</div>
+{% endblock %}

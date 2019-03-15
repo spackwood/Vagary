@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div style=" margin: 0 auto 0 auto;">
+
+    <div class="container">
+        <img src="{% static 'logo.png' %}" alt="">
+        <div class="row">
+            <div class="col-6">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Base City</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Los Angeles, CA"
+                        aria-describedby="basic-addon1">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Budget</span>
+                    </div>
+                    <input type="number" class="form-control" placeholder="$1000" aria-describedby="basic-addon1">
+                </div>
+            </div>
+            <div class="w-100"></div>
+
+            <div class="col-6">
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">From</span>
+                    </div>
+                    <input type="date" class="form-control" aria-describedby="basic-addon1">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">To</span>
+                    </div>
+                    <input type="date" class="form-control" aria-describedby="basic-addon1">
+                </div>
+            </div>
+        </div>
+        <div style="margin: 0 auto; text-align: center;">
+            <input type="submit" value="Search" class="btn btn-primary">
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+{% endblock %}
