@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Destination, Restaurant, Hotel, Event, Attraction, Trip, Airport
-
+from .models import Restaurant, Hotel, Event, Attraction, Airport, Trip, Destination
 # Register your models here.
 admin.site.register(Destination)
 admin.site.register(Restaurant)

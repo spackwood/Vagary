@@ -13,7 +13,7 @@ class Airport(models.Model):
 class Destination(models.Model):
     departure_date = models.DateField()
     return_date = models.DateField()
-    destination_airport = models.ForeignKey(Airport, on_delete=models.CASCADE)
+    # destination_airport = models.ForeignKey(Airport, on_delete=models.CASCADE)
     price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
 
     def __str__(self):
@@ -24,59 +24,3 @@ class Hotel(models.Model):
     address = models.CharField(max_length = 250)
     check_in = models.DateField ()
     check_out = models.DateField ()
-    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
-
-    def __str__(self):
-        return f"{self.name} // {self.price}"
-
-class Trip(models.Model):
-    trip_name = models.CharField(max_length=100)
-    base_city = models.ForeignKey(Airport, on_delete=models.CASCADE)
-    budget = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
-    # hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
-    # destination = models.ForeignKey(Destination, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    
-    def __str__(self):
-        return f"base_city: {self.base_city}, budget: ${self.budget}"
-
-class Restaurant(models.Model):
-    name = models.CharField(max_length =  250)
-    address = models.CharField(max_length =  250)
-    cuisine = models.CharField(max_length =  250)
-    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
-    date_time = models.DateTimeField()
-    # trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.name} // {self.price}"
-
-class Event (models.Model):
-    name = models.CharField(max_length =  250)
-    address = models.CharField(max_length =  250)
-    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
-    date_time = models.DateTimeField()
-    # trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.name} // {self.price}"
-
-class Attraction (models.Model):
-    name = models.CharField(max_length =  250)
-    address =  models.CharField(max_length =  250)
-    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
-    date_time = models.DateTimeField()
-    # trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.name} // {self.price}"
-
-class DressCode(models.Model):
-    type = models.CharField(max_length = 250)
-
-    def __str__(self):
-        return self.type
-    
-
-
-
