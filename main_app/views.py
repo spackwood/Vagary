@@ -10,8 +10,21 @@ amadeus = Client(
     client_secret=os.environ.get("AMADEUS_CLIENT_SECRET")
 )
 
+
 def home(request):
-    print()
+#     response = amadeus.get('/v1/shopping/flight-destinations', origin='LAX')
+# #     print(response.data)
+#     for r in response.data:
+#         a = r['price']['total']
+#         a = float(a)
+#         if a < 300:
+#             print(
+#                 f"""FROM LAX 
+#                 \nDestination: {r['destination']} 
+#                 \tprice: {a} 
+#                 \t departure date: {r['departureDate']}
+#                   \t return date: {r['returnDate']}"""
+#                   )
     return render(request, 'home.html')
 
 
