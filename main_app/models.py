@@ -5,8 +5,6 @@ from django.contrib.auth.models import User
 import urllib3
 import xml
 
-skyscanner_api = 'prtl6749387986743898559646983194'
-url = 'http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0/FR/eur/en-US/uk/us/anytime/anytime?apikey=prtl6749387986743898559646983194'
 
 # Create your models here.
 

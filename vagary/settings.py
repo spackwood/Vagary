@@ -9,11 +9,15 @@ https://docs.djangoproject.com/en/2.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
-
 import os
+import environ
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+environ.Env.read_env()
+
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -120,6 +124,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
+# root = environ.Path('/Users/meisam/documents/code/.env')
+# environ.Env.read_env()
+AMADEUS_CLIENT_ID = env('AMADEUS_CLIENT_ID')
+AMADEUS_CLIENT_SECRET = env('AMADEUS_CLIENT_SECRET')
 STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
