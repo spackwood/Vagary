@@ -5,6 +5,10 @@ from django.contrib.auth.models import User
 import urllib3
 import xml
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2dc6c31a3319d8d3def57bae4ae7eddb6c6e28a9
 # Create your models here.
 
 class Airport(models.Model):
