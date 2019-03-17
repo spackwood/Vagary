@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<h1>Remaining Budget: ${{remaining_budget}}</h1>
+{% for h in hotels %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{h.hotel.name}}</h5>
+        <p class="card-text">${{h.offers.0.price.total}} / per night</p>    
+    </div>
+</div>
+
+{% endfor %}
+
+
+{% endblock %}

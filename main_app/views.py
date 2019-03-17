@@ -12,7 +12,7 @@ amadeus = Client(
 
 
 def home(request):
-#     response = amadeus.get('/v1/shopping/flight-destinations', origin='LAX')
+    response = amadeus.get('/v1/shopping/flight-destinations', origin='LAX')
 # #     print(response.data)
 #     for r in response.data:
 #         a = r['price']['total']
@@ -25,14 +25,12 @@ def home(request):
 #                 \t departure date: {r['departureDate']}
 #                   \t return date: {r['returnDate']}"""
 #                   )
-    return render(request, 'home.html')
+    return render(request, 'home.html', { "flights": response.data})
 
 
 def signup(request):
     error_message = ''
     if request.method == 'POST':
-        # This is how to create a 'user' form object
-        # that includes the data from the browser
         form = UserCreationForm(request.POST)
         if form.is_valid():
             # This will add the user to the database
@@ -46,3 +44,38 @@ def signup(request):
     form = UserCreationForm()
     context = {'form': form, 'error_message': error_message}
     return render(request, 'registration/signup.html', context)
+
+def destinations(request):
+    origin = request.POST.get('origin')
+    d_date = request.POST.get('d_date')
+    budget = float(request.POST.get('budget'))
+    search_list = amadeus.shopping.flight_destinations.get(
+        origin=origin,
+        departureDate=d_date
+        ).data
+    destinations = []
+    # print(json.dumps(search_list.data, indent=2))
+    # print(len(search_list.data))
+    for destination in search_list:
+    # print(json.dumps(destination, indent=2))
+        d_price = float(destination['price']['total'])
+        # print(d_price)
+        if d_price <= budget/2:
+            destinations.append(destination)
+
+    print(destinations)
+    return render(request, 'destinations/search.html', {'destinations': destinations, 'budget': budget})
+
+def hotel_search(request, airport_code):
+    budget = float(request.POST.get('budget'))
+    flight_price = float(request.POST.get('flight_price'))
+    remaining_budget = budget - flight_price
+    hotel_search = amadeus.shopping.hotel_offers.get(cityCode=airport_code).data
+# print(json.dumps(hotel_search, indent=2))
+    hotels = []
+    for hotel in hotel_search:
+        h_price = float(hotel['offers'][0]['price']['total'])
+        if h_price <= remaining_budget:
+            hotels.append(hotel)
+            
+    return render(request, 'hotels/search.html', {'hotels' : hotels, 'remaining_budget': remaining_budget})

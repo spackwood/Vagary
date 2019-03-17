@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+{% for d in destinations %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{d.destination}}</h5>
+        <p class="card-text">${{d.price.total}}</p>
+        <p class="card-text">Departure Date: {{d.departureDate}}</p>
+        <p class="card-text">Return Date: {{d.returnDate}}</p>
+        <form action="/destinations/{{d.destination}}/hotels" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="budget" value = "{{budget}}">
+            <input type="hidden" name="flight_price" value = "{{d.price.total}}">
+            <input type="submit" value="HOTELS" class="btn btn-primary" >
+        
+        </form>
+    </div>
+</div>
+
+{% endfor %}
+
+
+{% endblock %}
