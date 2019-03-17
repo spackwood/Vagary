@@ -12,7 +12,7 @@ amadeus = Client(
 
 
 def home(request):
-    response = amadeus.get('/v1/shopping/flight-destinations', origin='LAX')
+    # response = amadeus.get('/v1/shopping/flight-destinations', origin='LAX')
 # #     print(response.data)
 #     for r in response.data:
 #         a = r['price']['total']
@@ -25,7 +25,9 @@ def home(request):
 #                 \t departure date: {r['departureDate']}
 #                   \t return date: {r['returnDate']}"""
 #                   )
-    return render(request, 'home.html', { "flights": response.data})
+    return render(request, 'home.html', 
+    # { "flights": response.data}
+    )
 
 
 def signup(request):

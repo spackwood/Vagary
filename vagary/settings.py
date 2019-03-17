@@ -124,8 +124,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-# root = environ.Path('/Users/meisam/documents/code/.env')
-# environ.Env.read_env()
+root = environ.Path('/Users/meisam/documents/code/.env')
+environ.Env.read_env()
 AMADEUS_CLIENT_ID = env('AMADEUS_CLIENT_ID')
 AMADEUS_CLIENT_SECRET = env('AMADEUS_CLIENT_SECRET')
 STATIC_URL = '/static/'

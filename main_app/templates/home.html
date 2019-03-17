@@ -1,51 +1,41 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<br><br>
 <form action="destinations/search/" method="POST">
     {%csrf_token%}
-    <div style=" margin: 0 auto 0 auto;">
-
-        <div class="container">
-            <div style="text-align: center;">
-                <img src="{% static 'logo.png' %}" alt="">
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">Departing Airport</span>
-                        </div>
-                        <input type="text" class="form-control" name="origin" placeholder="LAX"
-                            aria-describedby="basic-addon1">
+    <div class="container h-100">
+        <div style="text-align: center;">  
+            <h1>vagary</h1>
+        </div>
+        <div class="row">
+            <div class="col-12 align-self-center">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Where Are You Now?</span>
                     </div>
+                    <input type="text" class="form-control" name="origin" placeholder="LAX" aria-describedby="basic-addon1">
                 </div>
-                <div class="col-6">
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">Budget</span>
-                        </div>
-                        <input type="number" class="form-control" name="budget" placeholder="$1000" aria-describedby="basic-addon1">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">How Much Can You Spend?</span>
                     </div>
+                    <input type="number" class="form-control" name="budget" placeholder="$1000" aria-describedby="basic-addon1">
                 </div>
-                <div class="w-100"></div>
-
-                <div class="col-6">
-
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">From</span>
-                        </div>
-                        <input type="date" class="form-control" name="d_date" aria-describedby="basic-addon1">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">When Do You Wanna Leave?</span>
                     </div>
+                    <input type="date" class="form-control" name="d_date" aria-describedby="basic-addon1">
                 </div>
-                
-            </div>
-            <div style="margin: 0 auto; text-align: center;">
-                <input type="submit" value="Search" class="btn btn-outline-danger">
             </div>
         </div>
     </div>
+    <div style="margin: 0 auto; text-align: center;">
+        <input type="submit" value="Get Me Outta Here!" class="btn btn-light">
+    </div>
 </form>
+
 
 
 {% endblock %}

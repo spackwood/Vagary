@@ -1,0 +1,30 @@
+.card-footer {
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+}
+
+body {
+    font-family: 'Sniglet', cursive;
+    background-image: url('globe.jpeg');
+    background-position: center;
+    height: 100vh;
+}
+
+h1 {
+    font-family: 'Pacifico', cursive;
+    padding: 20px;
+    font-size: 150px;
+    margin-bottom: 0px;
+}
+
+.navbar-brand {
+    font-family: 'Pacifico', cursive;
+    font-size: 20px; 
+}
+
+.btn {
+    border: 2px solid black;
+}
