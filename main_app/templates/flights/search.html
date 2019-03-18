@@ -6,7 +6,7 @@
     <div class="card-body">
         <p class="card-text">Departing From: {{f.offerItems.0.services.0.segments.0.flightSegment.departure.iataCode}} on {{f.offerItems.0.services.0.segments.0.flightSegment.departure.at|slice:":10"}} at {{f.offerItems.0.services.0.segments.0.flightSegment.departure.at|slice:"11:"|slice:":5"}}</p>
         <p class="card-text">Arriving At: {{f.offerItems.0.services.0.segments.0.flightSegment.arrival.iataCode}} on {{f.offerItems.0.services.0.segments.0.flightSegment.arrival.at|slice:":10"}} at {{f.offerItems.0.services.0.segments.0.flightSegment.arrival.at|slice:"11:"|slice:":5"}}</p>
-        <p class="card-text">${{f.offerItems.0.price.total}}</p> 
+        <p class="card-text">${{f.offerItems.0.price.total}}</p>
         <form action="/flights/add/" method="POST">
             {% csrf_token %}
             <input type="hidden" name="flight_price" value = "{{f.offerItems.0.price.total}}">
