@@ -126,8 +126,22 @@ def flight_add(request):
     print(current_flight)
     
     return render(request, 'trip.html')
+
+def hotel_add(request):
+    price = request.POST.get('price')
+    name = request.POST.get('name')
+    check_out = request.POST.get('check_out')
+    check_in = request.POST.get('check_in')
+    street = request.POST.get('street')
+    city = request.POST.get('city')
+
+    current_hotel = Hotel.objects.create(
+        name = name,
+        check_out = check_out,
+        check_in = check_in, 
+        address = street + city,
+        price = price)
+
+    print(current_hotel)
     
-    # for flight in flights: 
-    #     if flight['uniqueId'] == unique_id:
-    #         current_flight = flight
-    #         print(current_flight)
+    return render(request, 'trip.html')
