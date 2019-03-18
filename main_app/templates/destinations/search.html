@@ -9,20 +9,19 @@
         <p class="card-text">Flights as low as: ${{d.price.total}}</p>
         <p class="card-text">Departure Date: {{d.departureDate}}</p>
         <p class="card-text">Return Date: {{d.returnDate}}</p>
-        <form action="/destinations/{{d.destination}}/hotels/" method="POST">
+        <form action="/{{d.destination}}/hotels/" method="POST">
             {% csrf_token %}
             <input type="hidden" name="budget" value = "{{budget}}">
             <input type="hidden" name="destination_estimate" value = "{{d.price.total}}">
             <input type="submit" value="HOTELS" class="btn btn-primary" >
         </form>
-        <form action="/destinations/{{d.destination}}/flights/" method="POST">
+        <form action="/{{d.destination}}/flights/" method="POST">
             {% csrf_token %}
             <input type="hidden" name="budget" value = "{{budget}}">
             <input type="hidden" name="origin" value = "{{origin}}">
             <input type="hidden" name="destination_estimate" value = "{{d.price.total}}">
             <input type="hidden" name="departure_date" value = "{{d.departureDate}}">
             <input type="submit" value="FLIGHTS" class="btn btn-primary" >
-        
         </form>
     </div>
 </div>

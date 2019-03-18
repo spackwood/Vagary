@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Restaurant, Hotel, Event, Attraction, Airport, Trip, Destination
+from .models import Restaurant, Hotel, Event, Attraction, Airport, Trip, Flight
 # Register your models here.
-admin.site.register(Destination)
+admin.site.register(Flight)
 admin.site.register(Restaurant)
 admin.site.register(Hotel)
 admin.site.register(Attraction)

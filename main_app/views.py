@@ -5,7 +5,7 @@ from amadeus import Client, ResponseError
 from amadeus.client.decorator import Decorator
 import os
 
-from .models import Airport, Trip, Hotel, Destination 
+from .models import Airport, Trip, Hotel, Flight
 
 # Create your views here.
 amadeus = Client(
@@ -54,6 +54,8 @@ def destinations(request):
     origin = request.POST.get('origin')
     d_date = request.POST.get('d_date')
     budget = float(request.POST.get('budget'))
+    print(request.user)
+
     search_list = amadeus.shopping.flight_destinations.get(
         origin=origin,
         departureDate=d_date
@@ -95,20 +97,37 @@ def flight_search(request, airport_code):
     flight_search = amadeus.shopping.flight_offers.get(destination=airport_code, origin=origin, departureDate=departure_date).data
 
     flights = []
+
     for flight in flight_search:
+        n = 0
+        flight['uniqueId'] = n + 1
         f_price = float(flight['offerItems'][0]['price']['total'])
         if f_price <= budget/3:
             flights.append(flight)
+    
+    # print(flight_search[0])
 
-    return render(request, 'flights/search.html', {'flights': flights})
+    return render(request, 'flights/search.html', {'flights': flights, 'departure_date': departure_date, 'airport_code': airport_code})
 
-# def create_trip(request, flight_id, hotel_id):
+def flight_add(request):
+    price = request.POST.get('flight_price')
+    origin = request.POST.get('origin')
+    destination = request.POST.get('destination')
+    departure_date = request.POST.get('departure_date')
+    return_date = request.POST.get('return_date')
 
-    # d_airport = Airport.objects.create(IATA_code = d.origin)
-    # a_airport = Airport.objects.create(IATA_code = d.destination)
+    current_flight = Flight.objects.create(
+        departure_date = departure_date,
+        return_date = return_date,
+        destination = destination,
+        price = price,
+        origin = origin)
 
-    # my_trip = Trip.objects.create(base_city = d_airport, budget = budget, user = user)
-
-    # destination = Destination.objects.create(departure_date=d.departureDate, return_date=d.returnDate, destination_airport=a_airport, trip=my_trip, price=d.price.total)
-
-    # return render(request, 'trips/current_trip.html', {'destination': destination, "trip": my_trip})
+    print(current_flight)
+    
+    return render(request, 'trip.html')
+    
+    # for flight in flights: 
+    #     if flight['uniqueId'] == unique_id:
+    #         current_flight = flight
+    #         print(current_flight)
