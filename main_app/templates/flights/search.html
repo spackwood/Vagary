@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% for f in flights%}
+<div class="card">
+    <div class="card-body">
+        <p class="card-text">Departing From: {{f.offerItems.0.services.0.segments.0.flightSegment.departure.iataCode}} at {{f.offerItems.0.services.0.segments.0.flightSegment.departure.at}}</p>
+        <p class="card-text">Arriving At: {{f.offerItems.0.services.0.segments.0.flightSegment.arrival.iataCode}} at {{f.offerItems.0.services.0.segments.0.flightSegment.arrival.at}}</p>
+        <p class="card-text">${{f.offerItems.0.price.total}}</p>    
+    </div>
+</div>
+
+{% endfor %}
+{% endblock %}
