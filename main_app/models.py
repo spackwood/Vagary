@@ -15,10 +15,11 @@ class Airport(models.Model):
     def __str__(self):
         return f"{self.name} // {self.IATA_code}"
 
-class Destination(models.Model):
+class Flight(models.Model):
     departure_date = models.DateField()
     return_date = models.DateField()
-    # destination_airport = models.ForeignKey(Airport, on_delete=models.CASCADE)
+    origin = models.CharField(max_length = 3, default = 'LAX')
+    destination = models.CharField(max_length = 3, default = 'LAX')
     # trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
     price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
 
@@ -37,10 +38,10 @@ class Hotel(models.Model):
         return f"{self.name} // {self.price}"
 
 class Trip(models.Model):
-    # base_city = models.ForeignKey(Airport, on_delete=models.CASCADE)
+    name = models.CharField(max_length = 250, default = 'My Trip')
     budget = models.IntegerField()
+    # flight = models.ForeignKey(Flight, on_delete=models.CASCADE)
     # hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
-    # destination = models.ForeignKey(Destination, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
