@@ -19,6 +19,7 @@ class Destination(models.Model):
     departure_date = models.DateField()
     return_date = models.DateField()
     # destination_airport = models.ForeignKey(Airport, on_delete=models.CASCADE)
+    # trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
     price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
 
     def __str__(self):
@@ -29,6 +30,7 @@ class Hotel(models.Model):
     address = models.CharField(max_length = 250)
     check_in = models.DateField ()
     check_out = models.DateField ()
+    # trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
     price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
 
     def __str__(self):
