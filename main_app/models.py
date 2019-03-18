@@ -24,13 +24,13 @@ class Flight(models.Model):
     price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
 
     def __str__(self):
-        return f"Depart Date: {self.departure_date}, Return Date: {self.return_date}, Price: {self.price}"
+        return f"Depart Date: {self.departure_date}, Return Date: {self.return_date}, Price: {self.price}, Origin: {self.origin}, Destination: {self.destination}"
 
 class Hotel(models.Model):
     name = models.CharField(max_length = 250)
     address = models.CharField(max_length = 250)
-    check_in = models.DateField ()
-    check_out = models.DateField ()
+    check_in = models.CharField(max_length = 100)
+    check_out = models.CharField(max_length = 100)
     # trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
     price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
 
