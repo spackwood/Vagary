@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>{{trip.name}}</h3>
+<p>Budget: ${{trip.budget}}</p>
+
+<!-- {% if depart_flight %} -->
+<p>Departure Flight: {{depart_flight}}</p>
+    {% if return_flight %}
+    <p>Return Flight: {{return_flight}}</p>
+    {% else %}
+    <form action="/{{trip.id}}/{{depart_flight.origin}}/flights/" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="budget" value="{{trip.budget}}">
+        <input type="hidden" name="origin" value="{{depart_flight.destination}}">
+        <input type="date" class="form-control" name="return_date" aria-describedby="basic-addon1">
+        <input type="submit" value="Add Returning Flight" class="btn btn-primary">
+    </form>
+    {% endif %}
+
+    {% if hotel %}
+    <p>Hotel: {{hotel}}</p>
+    {% else %}
+    <form action="/{{trip.id}}/{{depart_flight.destination}}/hotels/" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="budget" value="{{trip.budget}}">
+        <input type="submit" value="Add Hotel" class="btn btn-primary">
+    </form>
+    {% endif %}
+ 
+<!-- {% else %}
+<form action="/{{trip.id}}/{{trip.origin}}/flights/" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="budget" value="{{trip.budget}}">
+    <input type="hidden" name="departure_date" value="{{trip.departure_date}}">
+    <input type="submit" value="Add Departing Flight" class="btn btn-primary">
+</form> 
+{% endif %} -->
+<br>
+<a href="{% url 'delete_trip' trip.id %}" class="btn btn-danger">Delete Trip</a>
+<a href="{% url 'edit_trip' trip.id %}" class="btn btn-success">Edit Trip</a>
+<hr>
+<hr>
+<p>Add Restaurant</p>
+<form action="" method="POST">
+    <input class="btn btn-primary" type="submit">
+</form>
+<hr>
+<p>Add Event</p>
+<form action="" method="POST">
+    <input class="btn btn-primary" type="submit">
+</form>
+{% endblock %}

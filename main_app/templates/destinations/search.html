@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 
+{{trip}}
+{{trip.name}}
 
 {% for d in destinations %}
 <div class="card">
@@ -9,27 +11,13 @@
         <p class="card-text">Flights as low as: ${{d.price.total}}</p>
         <p class="card-text">Departure Date: {{d.departureDate}}</p>
         <p class="card-text">Return Date: {{d.returnDate}}</p>
-        <form action="/{{d.destination}}/hotels/" method="POST">
+        <form action="/{{trip.id}}/{{d.destination}}/flights/" method="POST">
             {% csrf_token %}
-            <input type="hidden" name="budget" value = "{{budget}}">
-            <input type="hidden" name="destination_estimate" value = "{{d.price.total}}">
-            <input type="submit" value="HOTELS" class="btn btn-primary" >
-        </form>
-        <form action="/{{d.destination}}/flights/" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="budget" value = "{{budget}}">
-            <input type="hidden" name="origin" value = "{{origin}}">
-            <input type="hidden" name="destination_estimate" value = "{{d.price.total}}">
-            <input type="hidden" name="departure_date" value = "{{d.departureDate}}">
-            <input type="submit" value="DEPARTING FLIGHTS" class="btn btn-primary" >
-        </form>
-        <form action="/{{origin}}/flights/" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="budget" value = "{{budget}}">
-            <input type="hidden" name="origin" value = "{{d.destination}}">
-            <input type="hidden" name="destination_estimate" value = "{{d.price.total}}">
-            <input type="hidden" name="return_date" value = "{{d.returnDate}}">
-            <input type="submit" value="RETURNING FLIGHTS" class="btn btn-primary" >
+            <input type="hidden" name="budget" value="{{budget}}">
+            <input type="hidden" name="origin" value="{{origin}}">
+            <input type="hidden" name="destination_estimate" value="{{d.price.total}}">
+            <input type="hidden" name="departure_date" value="{{d.departureDate}}">
+            <input type="submit" value="DEPARTING FLIGHTS" class="btn btn-primary">
         </form>
     </div>
 </div>

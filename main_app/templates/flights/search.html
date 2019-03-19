@@ -1,18 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
-
+{{trip.name}}
 {% for f in flights%}
 <div class="card">
     <div class="card-body">
         <p class="card-text">Departing From: {{f.offerItems.0.services.0.segments.0.flightSegment.departure.iataCode}} on {{f.offerItems.0.services.0.segments.0.flightSegment.departure.at|slice:":10"}} at {{f.offerItems.0.services.0.segments.0.flightSegment.departure.at|slice:"11:"|slice:":5"}}</p>
         <p class="card-text">Arriving At: {{f.offerItems.0.services.0.segments.0.flightSegment.arrival.iataCode}} on {{f.offerItems.0.services.0.segments.0.flightSegment.arrival.at|slice:":10"}} at {{f.offerItems.0.services.0.segments.0.flightSegment.arrival.at|slice:"11:"|slice:":5"}}</p>
         <p class="card-text">${{f.offerItems.0.price.total}}</p>
-        <form action="/flights/add/" method="POST">
+        <form action="/{{trip.id}}/{{airport_code}}/flights/add/" method="POST">
             {% csrf_token %}
             <input type="hidden" name="price" value = "{{f.offerItems.0.price.total}}">
             <input type="hidden" name="departure_date" value = "{{f.offerItems.0.services.0.segments.0.flightSegment.departure.at|slice:':10'}}">
             <input type="hidden" name="destination" value = "{{f.offerItems.0.services.0.segments.0.flightSegment.arrival.iataCode}}">
             <input type="hidden" name="origin" value = "{{f.offerItems.0.services.0.segments.0.flightSegment.departure.iataCode}}">
+            <input type="hidden" name="trip" value = "{{trip.id}}">
             <input type="submit" value="Add to Trip" class="btn btn-primary" >
         </form>  
     </div>

@@ -130,12 +130,7 @@ USE_TZ = True
 environ.Env.read_env()
 AMADEUS_CLIENT_ID = env('AMADEUS_CLIENT_ID')
 AMADEUS_CLIENT_SECRET = env('AMADEUS_CLIENT_SECRET')
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-
-django_heroku.settings(locals())
