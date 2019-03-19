@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-
-<h1>Remaining Budget: ${{remaining_budget}}</h1>
+{{trip.id}}
+<h2>Remaining Budget: ${{remaining_budget}}</h2>
 {% for h in hotels %}
 <div class="card">
     <div class="card-body">
@@ -18,6 +18,7 @@
         <input type="hidden" name="zipcode" value = "{{h.hotel.address.postalCode}}">
         <input type="hidden" name="city" value = "{{h.hotel.address.cityName}}">
         <input type="hidden" name="price" value = "{{h.offers.0.price.total}}">
+        <input type="hidden" name="trip" value="{{trip.id}}">
         <input type="submit" value="Add to Trip" class="btn btn-primary" >
     </form>  
 </div>

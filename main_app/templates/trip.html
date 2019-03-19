@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% block content %}
-
 <!-- {{current_flight}} -->
 {% if current_flight%}
 <div>
@@ -9,6 +8,7 @@
     <p>Destination: {{current_flight.destination}}</p>
     <p>Depart Date:{{current_flight.departure_date}}</p>
     <p>Price: {{current_flight.price}}</p>
+    <p>Trip Name: {{current_flight.trip.name}}</p>
 </div>
 {% else %}
 <div>
@@ -24,5 +24,14 @@
 <p>Price per night: {{current_hotel.price}}</p>
 {% else %}
 <h2>There is no hotel added.</h2>
+<!-- <form action="/profile/trip/" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name='flight' value='{{current_flight}}'>
+    <input type="hidden" name='return_flight' value="{{return_flight}}">
+    <input type="hidden" name='hotel' value={{current_hotel}}>
+    <label for="">Name your trip:</label>
+    <input type="text" name='name'>
+    <input type="submit" value="save trip">
+</form> -->
 {%endif%}
 {% endblock %}

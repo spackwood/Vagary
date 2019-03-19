@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>User: {{trip.user}}</h2>
+<br>
+<h3>Trip Name: {{trip.name}}</h3>
+<p>Budget: ${{trip.budget}}</p>
+{% if depart_flight %}
+<p>Departure Flight: {{depart_flight}}</p>
+{% else %}
+<p>There is no flight</p>
+<a href="/"flight.origin"/flights/">Add a flight</a>
+{% endif %}
+{% if hotel %}
+<p>Hotel: {{hotel}}</p>
+{% else %}
+<p>There is no hotel</p>
+<a href="/"flight.origin"/hotels/">Add a hotel</a>
+{% endif %}
+<br>
+<a href="{% url 'delete_trip' trip.id %}" class="btn btn-danger">Delete Trip</a>
+<a href="{% url 'edit_trip' trip.id %}" class="btn btn-success">Edit Trip</a>
+<hr>
+<hr>
+<p>Add Restaurant</p>
+<form action="" method="POST">
+    <input class="btn btn-primary" type="submit">
+</form>
+<hr>
+<p>Add Event</p>
+<form action="" method="POST">
+    <input class="btn btn-primary" type="submit">
+</form>
+{% endblock %}
