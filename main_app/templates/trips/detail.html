@@ -9,7 +9,7 @@
     {% if return_flight %}
     <p>Return Flight: {{return_flight}}</p>
     {% else %}
-    <form action="/{{trip.id}}/{{depart_flight.destination}}/flights/" method="POST">
+    <form action="/{{trip.id}}/{{depart_flight.origin}}/flights/" method="POST">
         {% csrf_token %}
         <input type="hidden" name="budget" value="{{trip.budget}}">
         <input type="hidden" name="origin" value="{{depart_flight.destination}}">

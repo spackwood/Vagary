@@ -62,7 +62,7 @@ def destinations(request):
     budget = float(request.POST.get('budget'))
 
     if request.user.is_authenticated:
-        trip = Trip(budget=budget, user=request.user)
+        trip = Trip(budget=budget, user=request.user, origin=origin)
         trip.save()
     else:
         print('no user')
@@ -122,7 +122,7 @@ def flight_add(request, trip_id, airport_code):
     destination = request.POST.get('destination')
     departure_date = request.POST.get('departure_date')
     airport_code = airport_code
-
+        
     current_flight = Flight.objects.create(
         departure_date = departure_date,
         destination = destination,
@@ -130,8 +130,10 @@ def flight_add(request, trip_id, airport_code):
         origin = origin,
         trip = trip,
         )
-
-    return redirect(f'/trips/{trip.id}/{airport_code}')
+    if trip.origin == airport_code:
+        return redirect(f'/trips/{trip.id}/{airport_code}')
+    else: 
+        return redirect(f'/trips/{trip.id}/{origin}')
     # return render(request, 'trip.html', {'current_flight': current_flight})
 
 def hotel_add(request, trip_id, airport_code):
