@@ -1,19 +1,24 @@
 {% extends 'base.html' %}
+{% load mathfilters %}
 {% block content %}
-
 <h3>{{trip.name}}</h3>
 <p>Budget: ${{trip.budget}}</p>
 
 <!-- {% if depart_flight %} -->
+{% for i in iata %}
+{% if i.code == depart_flight.destination %}
+<h3>Flights to {{i.name}}</h3>
+{%endif%}
+{%endfor%}
 <p>Departure Flight: {{depart_flight}}</p>
-    {% if return_flight %}
+{% if return_flight %}
     <p>Return Flight: {{return_flight}}</p>
     {% else %}
     <form action="/{{trip.id}}/{{depart_flight.origin}}/flights/" method="POST">
         {% csrf_token %}
         <input type="hidden" name="budget" value="{{trip.budget}}">
         <input type="hidden" name="origin" value="{{depart_flight.destination}}">
-        <input type="date" class="form-control" name="return_date" aria-describedby="basic-addon1">
+        <input type="date" class="form-control" name="return_date" aria-describedby="basic-addon1" required>
         <input type="submit" value="Add Returning Flight" class="btn btn-primary">
     </form>
     {% endif %}
@@ -37,10 +42,19 @@
 </form> 
 {% endif %} -->
 <br>
-<a href="{% url 'delete_trip' trip.id %}" class="btn btn-danger">Delete Trip</a>
-<a href="{% url 'edit_trip' trip.id %}" class="btn btn-success">Edit Trip</a>
+<a href="{% url 'delete_trip' trip.id depart_flight.origin %}" class="btn btn-danger">Delete Trip</a>
+<a href="{% url 'edit_trip' trip.id depart_flight.origin%}" class="btn btn-success">Edit Trip</a>
 <hr>
-<hr>
+<h2>Remaining Balance:</h2>
+{%if not return_flight and not hotel%}
+<h2> ${{trip.budget|sub:depart_flight.price}}</h2>
+{%endif%}
+{%if return_flight and not hotel%}
+<h2> ${{trip.budget|sub:depart_flight.price|sub:return_flight.price}}</h2>
+{%endif%}
+{%if return_flight and hotel %}
+<h2>${{trip.budget|sub:depart_flight.price|sub:return_flight.price|sub:hotel.price}}</h2>
+{%endif%}
 <p>Add Restaurant</p>
 <form action="" method="POST">
     <input class="btn btn-primary" type="submit">

@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% block content %}
+{% block content %} 
 
-<h2>Delete Trip</h2>
-<h3>Are you sure you want to delete <span>{{ object.name }}</span>?</h3>
-<form action="" method="POST">
-    {% csrf_token%}
-    <input type="submit" value="Yes - Delete!" class="btn btn-danger">
-    <a href="{% url 'detail' trip.id %}">Cancel</a>
-</form>
+    <h2>Delete Trip</h2>
+    <h3>Are you sure you want to delete <span>{{ object.name }}</span>?</h3>
+    <form action="" method="POST">
+        {% csrf_token%}
+        <input type="submit" value="Yes - Delete!" class="btn btn-danger">
+        <a href="/trips/">Cancel</a>
+    </form>
 
 {% endblock %}

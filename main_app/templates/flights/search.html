@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-{{trip.name}}
+{%for i in iata%}
+        {%if i.code == airport_code %}
+        <h2 class="card-title">Flights to {{i.name}}</h5>
+        {%endif%}
+        {%endfor%}
 {% for f in flights%}
 <div class="card">
     <div class="card-body">
