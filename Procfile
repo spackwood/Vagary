@@ -1,0 +1,1 @@
+web: gunicorn vagary.wsgi --log-file -
