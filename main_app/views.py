@@ -168,8 +168,10 @@ class CreateTrip(LoginRequiredMixin, CreateView):
 
 def trips_detail(request, trip_id, airport_code):
     trip = Trip.objects.get(id=trip_id)
-    print(trip)
-    origin = airport_code
+    if airport_code == trip.origin: 
+        origin = airport_code
+    else: 
+        origin = trip.origin
    
     try:
         depart_flight = Flight.objects.get(trip=trip, origin=origin)
