@@ -1,16 +1,11 @@
 from django.shortcuts import render, redirect
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from amadeus import Client, ResponseError
 from amadeus.client.decorator import Decorator
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, DetailView
-from django.contrib.auth import authenticate, login
 import os
 
-from .models import Airport, Trip, Hotel, Flight, User
+from .models import Airport, Trip, Hotel, Flight
 
 # Create your views here.
 amadeus = Client(
@@ -59,26 +54,26 @@ def destinations(request):
     origin = request.POST.get('origin')
     d_date = request.POST.get('d_date')
     budget = float(request.POST.get('budget'))
-    if request.user.is_authenticated:
-        trip = Trip(budget=budget, user=request.user)
-        trip.save()
-    else:
-        print('no user')
+    print(request.user)
+
     search_list = amadeus.shopping.flight_destinations.get(
         origin=origin,
         departureDate=d_date
         ).data
     destinations = []
+    # print(json.dumps(search_list.data, indent=2))
+    # print(len(search_list.data))
     for destination in search_list:
+    # print(json.dumps(destination, indent=2))
         d_price = float(destination['price']['total'])
+        # print(d_price)
         if d_price <= budget/2:
             destinations.append(destination)
-    return render(request, 'destinations/search.html', {'destinations': destinations, 'budget': budget, 'origin': origin, 'departure_date':d_date, "trip": trip})
+    # print(destinations)
+    return render(request, 'destinations/search.html', {'destinations': destinations, 'budget': budget, 'origin': origin, 'departure_date':d_date})
 
 def hotel_search(request, airport_code):
     budget = float(request.POST.get('budget'))
-    t = request.POST.get('trip')
-    trip = Trip.objects.get(id=t)
     # destination_estimate = float(request.POST.get('destination_estimate'))
     # remaining_budget = budget - destination_estimate
     hotel_search = amadeus.shopping.hotel_offers.get(cityCode=airport_code).data
@@ -87,8 +82,9 @@ def hotel_search(request, airport_code):
     for hotel in hotel_search:
         h_price = float(hotel['offers'][0]['price']['total'])
         if h_price <= budget/3:
-            hotels.append(hotel) 
-    return render(request, 'hotels/search.html', {'hotels' : hotels, 'trip': trip})
+            hotels.append(hotel)
+            
+    return render(request, 'hotels/search.html', {'hotels' : hotels})
 
 def flight_search(request, airport_code):
     budget = float(request.POST.get('budget'))
@@ -97,9 +93,9 @@ def flight_search(request, airport_code):
     # remaining_budget = budget - destination_estimate
     origin = request.POST.get('origin')
     departure_date = request.POST.get('departure_date') or request.POST.get('return_date')
-    t = request.POST.get('trip')
+
     flight_search = amadeus.shopping.flight_offers.get(destination=airport_code, origin=origin, departureDate=departure_date).data
-    trip = Trip.objects.get(id=t)
+
     flights = []
 
     for flight in flight_search:
@@ -111,14 +107,11 @@ def flight_search(request, airport_code):
     
     # print(flight_search[0])
 
-    return render(request, 'flights/search.html', {'flights': flights, 'trip': trip, 'departure_date': departure_date, 'airport_code': airport_code})
+    return render(request, 'flights/search.html', {'flights': flights, 'departure_date': departure_date, 'airport_code': airport_code})
 
 def flight_add(request):
     price = request.POST.get('price')
     print(price)
-    t = request.POST.get('trip')
-    trip = Trip.objects.get(id=t)
-    print(trip)
     origin = request.POST.get('origin')
     destination = request.POST.get('destination')
     departure_date = request.POST.get('departure_date')
@@ -127,10 +120,9 @@ def flight_add(request):
         destination = destination,
         price = price,
         origin = origin,
-        trip = trip,
         )
-    return redirect(f'/trips/{trip.id}')
-    # return render(request, 'trip.html', {'current_flight': current_flight})
+    # print(current_flight)
+    return render(request, 'trip.html', {'current_flight': current_flight})
 
 def hotel_add(request):
     price = request.POST.get('price')
@@ -139,70 +131,15 @@ def hotel_add(request):
     check_in = request.POST.get('check_in')
     street = request.POST.get('street')
     city = request.POST.get('city')
-    t = request.POST.get('trip')
-    trip = Trip.objects.get(id=t)
+
     current_hotel = Hotel.objects.create(
         name = name,
         check_out = check_out,
         check_in = check_in, 
         address = street + city,
-        price = price,
-        trip = trip
+        price = price
         )
 
     # print(current_hotel)
     
     return render(request, 'trip.html', {'current_hotel': current_hotel})
-
-class CreateTrip(LoginRequiredMixin, CreateView):
-    model = Trip
-    fields = ['name', 'budget']
-    def form_valid(self, form):
-        form.instance.user = self.request.user    # Let the CreateView do its job as usual
-        return super().form_valid(form)
-
-def trips_detail(request, trip_id):
-    trip = Trip.objects.get(id=trip_id)
-    # depart_flight=""
-    
-    try:
-        depart_flight = Flight.objects.get(trip=trip)
-        print('true')
-    except:
-        depart_flight = None
-        print('false')
-
-    try:
-        hotel = Hotel.objects.get(trip=trip)
-    except:
-        hotel = None
-    
-    return render(request, 'trips/detail.html', {
-        'trip': trip,
-        'hotel': hotel,
-        'depart_flight': depart_flight
-    })
-
-class TripList(ListView):
-    model = Trip
-
-class TripDelete(LoginRequiredMixin, DeleteView):
-    model = Trip
-    success_url = '/trips/'
-
-class TripEdit(LoginRequiredMixin, UpdateView):
-    model = Trip
-    fields = ['name', 'budget']
-    # success_url = '/trips/'
-
-def SaveTrip(request):
-    form = request.POST
-    print(form)
-    # new_trip = form.save(commit=False)
-    # Trip.flight = request.POST.get('flight','')
-    # Trip.budget = 1000
-    # Trip.name = request.POST.get('name')
-    # Trip.user = 'meisam'
-
-    # Trip.save()
-    # return redirect('destination_search')
