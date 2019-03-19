@@ -11,7 +11,6 @@
             {% csrf_token %}
             <input type="hidden" name="price" value = "{{f.offerItems.0.price.total}}">
             <input type="hidden" name="departure_date" value = "{{f.offerItems.0.services.0.segments.0.flightSegment.departure.at|slice:':10'}}">
-            <input type="hidden" name="return_date" value = "{{f.offerItems.0.services.0.segments.0.flightSegment.arrival.at|slice:':10'}}">
             <input type="hidden" name="destination" value = "{{f.offerItems.0.services.0.segments.0.flightSegment.arrival.iataCode}}">
             <input type="hidden" name="origin" value = "{{f.offerItems.0.services.0.segments.0.flightSegment.departure.iataCode}}">
             <input type="submit" value="Add to Trip" class="btn btn-primary" >

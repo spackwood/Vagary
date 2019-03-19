@@ -92,17 +92,17 @@ def flight_search(request, airport_code):
     # print(destination_estimate)
     # remaining_budget = budget - destination_estimate
     origin = request.POST.get('origin')
-    departure_date = request.POST.get('departure_date')
+    departure_date = request.POST.get('departure_date') or request.POST.get('return_date')
 
     flight_search = amadeus.shopping.flight_offers.get(destination=airport_code, origin=origin, departureDate=departure_date).data
 
     flights = []
 
     for flight in flight_search:
-        n = 0
-        flight['uniqueId'] = n + 1
         f_price = float(flight['offerItems'][0]['price']['total'])
-        if f_price <= budget/3:
+        f_origin = flight['offerItems'][0]['services'][0]['segments'][0]['flightSegment']['departure']['iataCode']
+        f_destination = flight['offerItems'][0]['services'][0]['segments'][0]['flightSegment']['arrival']['iataCode']
+        if f_price <= budget/3 and f_origin == origin and f_destination == airport_code:
             flights.append(flight)
     
     # print(flight_search[0])
@@ -110,19 +110,18 @@ def flight_search(request, airport_code):
     return render(request, 'flights/search.html', {'flights': flights, 'departure_date': departure_date, 'airport_code': airport_code})
 
 def flight_add(request):
-    price = request.POST.get('flight_price')
+    price = request.POST.get('price')
+    print(price)
     origin = request.POST.get('origin')
     destination = request.POST.get('destination')
     departure_date = request.POST.get('departure_date')
-    return_date = request.POST.get('return_date')
     current_flight = Flight.objects.create(
         departure_date = departure_date,
-        return_date = return_date,
         destination = destination,
         price = price,
         origin = origin,
         )
-    print(current_flight)
+    # print(current_flight)
     return render(request, 'trip.html', {'current_flight': current_flight})
 
 def hotel_add(request):
@@ -141,6 +140,6 @@ def hotel_add(request):
         price = price
         )
 
-    print(current_hotel)
+    # print(current_hotel)
     
     return render(request, 'trip.html', {'current_hotel': current_hotel})
