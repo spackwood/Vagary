@@ -12,9 +12,9 @@ urlpatterns = [
     path('<int:trip_id>/<airport_code>/flights/add/', views.flight_add, name = "flight_add"),
     path('<int:trip_id>/<airport_code>/hotels/add/', views.hotel_add, name = "hotel_add"),
     path('trips/', views.TripList.as_view(), name='view_trips'),
-    # path('trips/create/', views.CreateTrip.as_view(), name="create_trip"),
+    path('trips/create/', views.CreateTrip.as_view(), name="create_trip"),
     path('trips/<int:trip_id>/<airport_code>/', views.trips_detail, name="detail"),
-    path('trips/<int:pk>/delete/', views.TripDelete.as_view(), name='delete_trip'),
-    path('trips/<int:pk>/edit/', views.TripEdit.as_view(), name='edit_trip'),
+    path('trips/<int:pk>/<airport_code>/delete/', views.TripDelete.as_view(), name='delete_trip'),
+    path('trips/<int:pk>/<airport_code>/edit/', views.TripEdit.as_view(), name='edit_trip'),
     path('profile/trip/', views.SaveTrip, name="save_trip"),
 ]

@@ -7,7 +7,11 @@
 {% for d in destinations %}
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">{{d.destination}}</h5>
+        {%for i in iata%}
+        {%if i.code == d.destination %}
+        <h5 class="card-title">{{i.name}}({{d.destination}})</h5>
+        {%endif%}
+        {%endfor%}
         <p class="card-text">Flights as low as: ${{d.price.total}}</p>
         <p class="card-text">Departure Date: {{d.departureDate}}</p>
         <p class="card-text">Return Date: {{d.returnDate}}</p>

@@ -21,8 +21,6 @@ class Trip(models.Model):
     budget = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     origin = models.CharField(max_length = 3, default = 'LAX')
-    # departure_date = models.DateField(default = datetime.datetime.today())
-    # return_date = models.DateField(default = datetime.datetime.today())
 
     def __str__(self):
         return f"budget: ${self.budget}"
@@ -36,7 +34,7 @@ class Hotel(models.Model):
     check_in = models.CharField(max_length = 100)
     check_out = models.CharField(max_length = 100)
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
-    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
+    price = models.FloatField()
     
     def __str__(self):
         return f"{self.name} // {self.price}"
@@ -46,7 +44,7 @@ class Flight(models.Model):
     origin = models.CharField(max_length = 3, default = 'LAX')
     destination = models.CharField(max_length = 3, default = 'LAX')
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
-    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
+    price = models.FloatField()
     
     def __str__(self):
         return f"Depart Date: {self.departure_date}, Price: {self.price}, Origin: {self.origin}, Destination: {self.destination}"

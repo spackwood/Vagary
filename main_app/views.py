@@ -9,8 +9,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView
 from django.contrib.auth import authenticate, login
 import os
+import requests
 from datetime import datetime
-
 from .models import Airport, Trip, Hotel, Flight, User
 
 # Create your views here.
@@ -18,6 +18,8 @@ amadeus = Client(
     client_id=os.environ.get("AMADEUS_CLIENT_ID"),
     client_secret=os.environ.get("AMADEUS_CLIENT_SECRET")
 )
+data = requests.get("http://iatacodes.org/api/v6/cities?api_key=c05152c1-441f-430e-9c6c-54dca70f1427")
+res = data.json()['response']
 
 
 def home(request):
@@ -60,25 +62,27 @@ def destinations(request):
     origin = request.POST.get('origin')
     d_date = request.POST.get('d_date')
     budget = float(request.POST.get('budget'))
-
     if request.user.is_authenticated:
         trip = Trip(budget=budget, user=request.user, origin=origin)
         trip.save()
     else:
         print('no user')
-
     search_list = amadeus.shopping.flight_destinations.get(
         origin=origin,
         departureDate=d_date
         ).data
-
     destinations = []
     for destination in search_list:
         d_price = float(destination['price']['total'])
         if d_price <= budget/2:
             destinations.append(destination)
-
-    return render(request, 'destinations/search.html', {'destinations': destinations, 'budget': budget, 'origin': origin, 'departure_date':d_date, "trip": trip})
+    return render(request, 'destinations/search.html', {
+        'destinations': destinations, 
+        'budget': budget, 'origin': origin, 
+        'departure_date':d_date, 
+        "trip": trip,
+        'iata': res
+        })
 
 def hotel_search(request, trip_id, airport_code):
     budget = float(request.POST.get('budget'))
@@ -103,7 +107,6 @@ def flight_search(request, trip_id, airport_code):
     #     flight_search = amadeus.shopping.flight_offers.get(destination=airport_code, origin=origin, departureDate=return_date).data
     # else:
     flight_search = amadeus.shopping.flight_offers.get(destination=airport_code, origin=origin, departureDate=departure_date).data
-    
     flights = []
     for flight in flight_search:
         f_price = float(flight['offerItems'][0]['price']['total'])
@@ -111,9 +114,13 @@ def flight_search(request, trip_id, airport_code):
         f_destination = flight['offerItems'][0]['services'][0]['segments'][0]['flightSegment']['arrival']['iataCode']
         if f_price <= budget/3 and f_origin == origin and f_destination == airport_code:
             flights.append(flight)
-    
-
-    return render(request, 'flights/search.html', {'flights': flights, 'trip': trip, 'departure_date': departure_date, 'airport_code': airport_code})
+    return render(request, 'flights/search.html', {
+        'flights': flights, 
+        'trip': trip, 
+        'departure_date': departure_date, 
+        'airport_code': airport_code,
+        'iata': res
+        })
 
 def flight_add(request, trip_id, airport_code):
     price = request.POST.get('price')
@@ -161,7 +168,7 @@ def hotel_add(request, trip_id, airport_code):
 
 class CreateTrip(LoginRequiredMixin, CreateView):
     model = Trip
-    fields = ['name', 'budget', 'origin', 'departure_date', 'return_date']
+    fields = ['name', 'budget', 'origin']
     def form_valid(self, form):
         form.instance.user = self.request.user    # Let the CreateView do its job as usual
         return super().form_valid(form)
@@ -172,7 +179,7 @@ def trips_detail(request, trip_id, airport_code):
         origin = airport_code
     else: 
         origin = trip.origin
-   
+    
     try:
         depart_flight = Flight.objects.get(trip=trip, origin=origin)
         print('true')
@@ -199,16 +206,17 @@ def trips_detail(request, trip_id, airport_code):
         'hotel': hotel,
         'depart_flight': depart_flight, 
         'return_flight': return_flight,
+        'iata': res,
     })
 
 class TripList(ListView):
     model = Trip
 
-class TripDelete(LoginRequiredMixin, DeleteView):
+class TripDelete(DeleteView):
     model = Trip
     success_url = '/trips/'
 
-class TripEdit(LoginRequiredMixin, UpdateView):
+class TripEdit(UpdateView):
     model = Trip
     fields = ['name', 'budget']
     # success_url = '/trips/'
