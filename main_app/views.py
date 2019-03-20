@@ -175,6 +175,7 @@ class CreateTrip(LoginRequiredMixin, CreateView):
 
 def trips_detail(request, trip_id, airport_code):
     trip = Trip.objects.get(id=trip_id)
+
     if airport_code == trip.origin: 
         origin = airport_code
     else: 
@@ -194,7 +195,7 @@ def trips_detail(request, trip_id, airport_code):
         hotel = Hotel.objects.get(trip=trip)
     except:
         hotel = None
-    
+
     if depart_flight and return_flight and hotel:
        trip_days = (return_flight.departure_date - depart_flight.departure_date).days
        hotel.price = hotel.price * trip_days
@@ -207,8 +208,13 @@ def trips_detail(request, trip_id, airport_code):
         'iata': res,
     })
 
-class TripList(ListView):
-    model = Trip
+# class TripList(ListView):
+#     model = Trip
+
+def trip_list(request):
+    trip = Trip.objects.all()
+    return render(request, 'main_app/trip_list.html', {'trip_list': trip, 'iata': res})
+
 
 class TripDelete(DeleteView):
     model = Trip

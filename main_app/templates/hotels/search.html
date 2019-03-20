@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+
+{% block body%}
+<body>
+{% endblock %}
+
 {% block content %}
 {% for h in hotels %}
 <div class="card col-6 offset-md-3">
@@ -21,4 +26,8 @@
 </div>
 
 {% endfor %}
+{% endblock %}
+
+{% block footer %}
+    <div class="card-footer text-muted">
 {% endblock %}

@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+
+{% block body%}
+<body>
+{% endblock %}
+
 {% block content %}
 
 {% for d in destinations %}
@@ -23,4 +28,8 @@
 {% endfor %}
 
 
+{% endblock %}
+
+{% block footer %}
+    <div class="card-footer text-muted">
 {% endblock %}

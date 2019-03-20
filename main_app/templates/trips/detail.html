@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% load mathfilters %}
+{% block body%}
+<body>
+{% endblock %}
 {% block content %}
 <div class = "card col-8 offset-md-2">
     <div class="card-body text-center">
@@ -121,4 +124,7 @@
     </div>
 </div>
 
+{% endblock %}
+{% block footer %}
+    <div class="card-footer text-muted">
 {% endblock %}
