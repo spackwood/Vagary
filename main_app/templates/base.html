@@ -22,8 +22,9 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 </head>
-
-<body>
+{% block body%}
+<!-- <body> -->
+{% endblock %}
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="{% url 'home' %}">V</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -63,7 +64,9 @@
 
         {% endblock %}
     </main>
-    <div class="card-footer text-muted">
+    {% block footer %}
+    <!-- <div class="card-footer text-muted"> -->
+    {% endblock %}
         All Rights Reserved, &copy; 2019 Vagary &nbsp;
     </div>
 </body>

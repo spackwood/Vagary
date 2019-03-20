@@ -1,13 +1,43 @@
 {% extends 'base.html' %}
+
+{% block body%}
+<body>
+{% endblock %}
 {% block content %}
-<h2>Trips List</h2>
+<h1 class="card-header text-center">My Trips</h1>
 {% for trip in trip_list %}
-<a href="/trips/{{trip.id}}/{{trip.origin}}">
-    <div>
-        <p>Name: {{trip.name}}</p>
-        <p>Budget: ${{trip.budget}}</p>
+    {%if trip.flight_set.first%}
+    <div class="card col-6 offset-md-3">
+        <div class="card-body">
+            <div class = 'row'>
+                <div class = 'col-4 text-center'>
+                    <h3><span>Name</span></h3>
+                    <h2>{{trip.name}}</h2>
+                </div>
+                <div class = 'col-4 text-center'>
+                    <h3><span>Budget</span></h3>
+                    <h2>${{trip.budget}}</h2>
+                </div>
+                <div class = 'col-4 text-center'>
+                    <h3><span>Destination</span></h3>
+                    {%for i in iata%}
+                    {%if i.code == trip.flight_set.first.destination%}
+                        <h2>{{i.name}}</h2>
+                    {%endif%}
+                    {%endfor%}
+                </div>
+            </div>
+            <br><br>
+            <div class = 'row'>
+                <a href="/trips/{{trip.id}}/{{trip.origin}}" class="btn btn-primary add col-12">Check It Out</a>
+            </div>
+        </div>
     </div>
-</a>
+{% endif %}
 {% endfor %}
 
+{% endblock %}
+
+{% block footer %}
+    <div class="card-footer text-muted">
 {% endblock %}

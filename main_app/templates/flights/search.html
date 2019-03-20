@@ -1,16 +1,39 @@
 {% extends 'base.html' %}
+
+{% block body%}
+<body>
+{% endblock %}
+
 {% block content %}
 {%for i in iata%}
-        {%if i.code == airport_code %}
-        <h2 class="card-title">Flights to {{i.name}}</h5>
-        {%endif%}
-        {%endfor%}
+    {%if i.code == airport_code %}
+        <h2 class="card-header text-center">Flights to {{i.name}}</h2>
+    {%endif%}
+{%endfor%}
 {% for f in flights%}
-<div class="card">
+<div class="card col-6 offset-md-3">
     <div class="card-body">
-        <p class="card-text">Departing From: {{f.offerItems.0.services.0.segments.0.flightSegment.departure.iataCode}} on {{f.offerItems.0.services.0.segments.0.flightSegment.departure.at|slice:":10"}} at {{f.offerItems.0.services.0.segments.0.flightSegment.departure.at|slice:"11:"|slice:":5"}}</p>
-        <p class="card-text">Arriving At: {{f.offerItems.0.services.0.segments.0.flightSegment.arrival.iataCode}} on {{f.offerItems.0.services.0.segments.0.flightSegment.arrival.at|slice:":10"}} at {{f.offerItems.0.services.0.segments.0.flightSegment.arrival.at|slice:"11:"|slice:":5"}}</p>
-        <p class="card-text">${{f.offerItems.0.price.total}}</p>
+        <div class = 'row'>
+            <div class = 'col-6'>
+                <h4 class = "text-center">Departure</h4>
+                <h5> <span>Airport</span> {{f.offerItems.0.services.0.segments.0.flightSegment.departure.iataCode}}</h5>
+                <h5> <span>Date</span> {{f.offerItems.0.services.0.segments.0.flightSegment.departure.at|slice:":10"}}</h5>
+                <h5> <span>Time</span> {{f.offerItems.0.services.0.segments.0.flightSegment.departure.at|slice:"11:"|slice:":5"}}</h5>
+            </div>
+            <div class = 'col-6'>
+                <h4 class = "text-center">Arrival</h4>
+                <h5> <span>Airport</span> {{f.offerItems.0.services.0.segments.0.flightSegment.arrival.iataCode}}</h5>
+                <h5> <span>Date</span> {{f.offerItems.0.services.0.segments.0.flightSegment.arrival.at|slice:":10"}}</h5>
+                <h5> <span>Time</span> {{f.offerItems.0.services.0.segments.0.flightSegment.arrival.at|slice:"11:"|slice:":5"}}</h5>
+            </div>
+        </div>
+        <div class = 'row'>
+            <div class = 'col-12'>
+                <h4 class = 'text-center'>Price</h4>
+                <h3 class = 'text-center'>${{f.offerItems.0.price.total}}</h3>
+            </div>
+        </div>
+        
         <form action="/{{trip.id}}/{{airport_code}}/flights/add/" method="POST">
             {% csrf_token %}
             <input type="hidden" name="price" value = "{{f.offerItems.0.price.total}}">
@@ -18,10 +41,14 @@
             <input type="hidden" name="destination" value = "{{f.offerItems.0.services.0.segments.0.flightSegment.arrival.iataCode}}">
             <input type="hidden" name="origin" value = "{{f.offerItems.0.services.0.segments.0.flightSegment.departure.iataCode}}">
             <input type="hidden" name="trip" value = "{{trip.id}}">
-            <input type="submit" value="Add to Trip" class="btn btn-primary" >
+            <input type="submit" value="ADD TO TRIP" class="btn btn-primary pull-right add col-12" >
         </form>  
     </div>
 </div>
 
 {% endfor %}
+{% endblock %}
+
+{% block footer %}
+    <div class="card-footer text-muted">
 {% endblock %}

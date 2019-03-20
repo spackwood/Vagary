@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+
+{% block body%}
+<body>
+{% endblock %}
+
 {% block content %}
 <div style="width: 50%; margin: 0 auto;">
 
@@ -11,4 +16,8 @@
     <input type="hidden" name="next" value="{{ next }}">
 </form>
 </div>
+{% endblock %}
+
+{% block footer %}
+    <div class="card-footer text-muted">
 {% endblock %}

@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% block body%}
+<body>
+{% endblock %}
 {% block content %}
 <div style="width: 50%; margin: 0 auto;">
 
@@ -14,4 +17,7 @@
   <input type="submit" class="btn btn-outline-success" value="Sign Up">
 </form>
 </div>
+{% endblock %}
+{% block footer %}
+    <div class="card-footer text-muted">
 {% endblock %}

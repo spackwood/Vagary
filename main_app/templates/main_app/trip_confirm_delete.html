@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
-{% block content %} 
 
+{% block body%}
+<body>
+{% endblock %}
+
+{% block content %} 
     <h2>Delete Trip</h2>
     <h3>Are you sure you want to delete <span>{{ object.name }}</span>?</h3>
     <form action="" method="POST">
@@ -9,4 +13,8 @@
         <a href="/trips/">Cancel</a>
     </form>
 
+{% endblock %}
+
+{% block footer %}
+    <div id = "home-footer" class="card-footer text-muted">
 {% endblock %}

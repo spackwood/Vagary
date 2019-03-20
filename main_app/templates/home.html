@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block content %}
+
 <br><br>
+{% block body%}
+<body class = "bg-image">
+{% endblock %}
+
+{% block content %}
 <form action="destinations/search/" method="POST">
     {%csrf_token%}
     <div class="container h-100">
@@ -35,7 +40,8 @@
         <input type="submit" value="Get Me Outta Here!" class="btn btn-light">
     </div>
 </form>
+{% endblock %}
 
-
-
+{% block footer %}
+    <div id = "home-footer" class="card-footer text-muted">
 {% endblock %}

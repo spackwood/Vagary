@@ -1,27 +1,26 @@
 {% extends 'base.html' %}
+
+{% block body%}
+<body>
+{% endblock %}
+
 {% block content %}
 
-{{trip}}
-{{trip.name}}
-
 {% for d in destinations %}
-<div class="card">
-    <div class="card-body">
+<div class="card col-6 offset-md-3">
+    <div class="card-body text-center">
         {%for i in iata%}
         {%if i.code == d.destination %}
-        <h5 class="card-title">{{i.name}}({{d.destination}})</h5>
+        <h4 class = "card-header search-header">{{i.name}} ({{d.destination}})</h4>
         {%endif%}
         {%endfor%}
-        <p class="card-text">Flights as low as: ${{d.price.total}}</p>
-        <p class="card-text">Departure Date: {{d.departureDate}}</p>
-        <p class="card-text">Return Date: {{d.returnDate}}</p>
         <form action="/{{trip.id}}/{{d.destination}}/flights/" method="POST">
             {% csrf_token %}
             <input type="hidden" name="budget" value="{{budget}}">
             <input type="hidden" name="origin" value="{{origin}}">
             <input type="hidden" name="destination_estimate" value="{{d.price.total}}">
             <input type="hidden" name="departure_date" value="{{d.departureDate}}">
-            <input type="submit" value="DEPARTING FLIGHTS" class="btn btn-primary">
+            <input type="submit" value="Search flights as low as ${{d.price.total}}" class="btn btn-primary pull-right">
         </form>
     </div>
 </div>
@@ -29,4 +28,8 @@
 {% endfor %}
 
 
+{% endblock %}
+
+{% block footer %}
+    <div class="card-footer text-muted">
 {% endblock %}
