@@ -20,11 +20,7 @@
                 </div>
                 <div class = 'col-4 text-center'>
                     <h3><span>Destination</span></h3>
-                    {%for i in iata%}
-                    {%if i.code == trip.flight_set.first.destination%}
-                        <h2>{{i.name}}</h2>
-                    {%endif%}
-                    {%endfor%}
+                    <h2>{{trip.flight_set.first.destination%}}</h2>
                 </div>
             </div>
             <br><br>
