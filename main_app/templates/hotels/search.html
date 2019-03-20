@@ -1,12 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Remaining Budget: ${{remaining_budget}}</h2>
 {% for h in hotels %}
-<div class="card">
+<div class="card col-6 offset-md-3">
     <div class="card-body">
-        <h5 class="card-title">{{h.hotel.name}}</h5>
-        <p class="card-text">${{h.offers.0.price.total}} / per night</p>    
-        <a href = '/hotel/{{h.hotel.id}}/'>See More</a>
+        <h4 class = "col-12 text-center">{{h.hotel.name}}</h4>
+        <h5> <span> Price</span> ${{h.offers.0.price.total}} / per night</h5>    
     </div>
     <form action="/{{trip.id}}/{{airport_code}}/hotels/add/" method="POST">
         {% csrf_token %}
@@ -18,7 +16,7 @@
         <input type="hidden" name="city" value = "{{h.hotel.address.cityName}}">
         <input type="hidden" name="price" value = "{{h.offers.0.price.total}}">
         <input type="hidden" name="trip" value="{{trip.id}}">
-        <input type="submit" value="Add to Trip" class="btn btn-primary" >
+        <input type="submit" value="ADD TO TRIP" class="btn btn-primary pull-right add col-12">
     </form>  
 </div>
 

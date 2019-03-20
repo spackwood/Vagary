@@ -182,24 +182,22 @@ def trips_detail(request, trip_id, airport_code):
     
     try:
         depart_flight = Flight.objects.get(trip=trip, origin=origin)
-        print('true')
     except:
         depart_flight = None
-        print('false')
 
     try: 
         return_flight = Flight.objects.get(trip=trip, destination=origin)
-        print('true')
     except:
         return_flight = None
-        print('false')
 
     try:
         hotel = Hotel.objects.get(trip=trip)
-        print('true')
     except:
         hotel = None
-        print('false')
+    
+    if depart_flight and return_flight and hotel:
+       trip_days = (return_flight.departure_date - depart_flight.departure_date).days
+       hotel.price = hotel.price * trip_days
     
     return render(request, 'trips/detail.html', {
         'trip': trip,

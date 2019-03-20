@@ -1,67 +1,124 @@
 {% extends 'base.html' %}
 {% load mathfilters %}
 {% block content %}
-<h3>{{trip.name}}</h3>
-<p>Budget: ${{trip.budget}}</p>
-
-<!-- {% if depart_flight %} -->
-{% for i in iata %}
-{% if i.code == depart_flight.destination %}
-<h3>Flights to {{i.name}}</h3>
-{%endif%}
-{%endfor%}
-<p>Departure Flight: {{depart_flight}}</p>
-{% if return_flight %}
-    <p>Return Flight: {{return_flight}}</p>
+<div class = "card col-8 offset-md-2">
+    <div class="card-body text-center">
+    <h1 class = "card-header trip-header">{{trip.name}}</h1>
+    <br>
+    <!-- {% if depart_flight %} -->
+    <div class = 'row'>
+        <div class = 'col-6'>
+        {% for i in iata %}
+            {% if i.code == depart_flight.destination %}
+                <h4>Flight to {{i.name}}</h4>
+            {%endif%}
+        {%endfor%}
+            <h5>{{depart_flight.departure_date}} from {{depart_flight.origin}}</h5>
+        </div>
+        <div class = 'col-6'>
+            <h4>Price</h4>
+            <h5>${{depart_flight.price|floatformat:2}}</h5>
+        </div>
+    </div>
+    <div class = 'row'>
+        {% if return_flight %}
+        <div class = 'col-6'>
+            {% for i in iata %}
+                {% if i.code == return_flight.destination %}
+                    <h4>Flight to {{i.name}}</h4>
+                {%endif%}
+            {%endfor%}
+        <h5>{{return_flight.departure_date}} from {{return_flight.origin}}</h5>
+        </div>
+        <div class = 'col-6'>
+            <h4>Price</h4>
+            <h5>${{return_flight.price|floatformat:2}}</h5>
+        </div>
     {% else %}
-    <form action="/{{trip.id}}/{{depart_flight.origin}}/flights/" method="POST">
+        <div class = 'col-12 text-center'>
+        <form action="/{{trip.id}}/{{depart_flight.origin}}/flights/" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="budget" value="{{trip.budget}}">
+            <input type="hidden" name="origin" value="{{depart_flight.destination}}">
+            <input type="date" class="form-control" name="return_date" aria-describedby="basic-addon1" required>
+            <input type="submit" value="Add Returning Flight" class="btn btn-light">
+        </form>
+        </div>
+    {% endif %}
+    </div>
+    <div class = 'row'> 
+        {% if hotel %}
+        <div class = "col-6">
+            <h4>Hotel</h4>
+            <h5 class = "text-left">{{hotel.name}}</h5>
+            <p class = "text-left">{{hotel.address}}</p>
+        </div>
+        <div class = 'col-6'>
+            <h4>Price</h4>
+            <h5>${{hotel.price|floatformat:2}}</h5>
+        </div>
+        {% else %}
+        <div class = 'col-12 text-center'>
+        <form action="/{{trip.id}}/{{depart_flight.destination}}/hotels/" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="budget" value="{{trip.budget}}">
+            <input type="submit" value="Add Hotel" class="btn btn-light">
+        </form>
+        {% endif %}
+        </div>
+    </div>
+    <!-- {% else %}
+    <form action="/{{trip.id}}/{{trip.origin}}/flights/" method="POST">
         {% csrf_token %}
         <input type="hidden" name="budget" value="{{trip.budget}}">
-        <input type="hidden" name="origin" value="{{depart_flight.destination}}">
-        <input type="date" class="form-control" name="return_date" aria-describedby="basic-addon1" required>
-        <input type="submit" value="Add Returning Flight" class="btn btn-primary">
+        <input type="hidden" name="departure_date" value="{{trip.departure_date}}">
+        <input type="submit" value="Add Departing Flight" class="btn btn-primary">
+    </form> 
+    {% endif %} -->
+    <br>
+    <hr>
+    <div class = "row">
+        <div class = "col-4">
+            <h4>Budget</h4>
+            <h5>${{trip.budget}}</h5>
+        </div>
+        <div class = "col-4">
+            <h4>Current Total</h4>
+            {%if not return_flight and not hotel%}
+                <h5> ${{depart_flight.price|floatformat:2}}</h5>
+            {%endif%}
+            {%if return_flight and not hotel%}
+                <h5> ${{depart_flight.price|add:return_flight.price|floatformat:2}}</h5>
+            {%endif%}
+            {%if return_flight and hotel %}
+                <h5>${{depart_flight.price|add:return_flight.price|add:hotel.price|floatformat:2}}</h5>
+            {%endif%}
+        </div>
+        <div class = "col-4">
+            <h4>Remaining Balance</h4>
+            {%if not return_flight and not hotel%}
+                <h5> ${{trip.budget|sub:depart_flight.price|floatformat:2}}</h5>
+            {%endif%}
+            {%if return_flight and not hotel%}
+                <h5> ${{trip.budget|sub:depart_flight.price|sub:return_flight.price|floatformat:2}}</h5>
+            {%endif%}
+            {%if return_flight and hotel %}
+                <h5>${{trip.budget|sub:depart_flight.price|sub:return_flight.price|sub:hotel.price|floatformat:2}}</h5>
+            {%endif%}
+        </div>
+    </div>
+    <!-- <p>Add Restaurant</p>
+    <form action="" method="POST">
+        <input class="btn btn-primary" type="submit">
     </form>
-    {% endif %}
+    <hr>
+    <p>Add Event</p>
+    <form action="" method="POST">
+        <input class="btn btn-primary" type="submit">
+    </form> -->
+        <a href="{% url 'delete_trip' trip.id depart_flight.origin %}" class="btn btn-light col-12">Delete Trip</a>
+        <a href="{% url 'edit_trip' trip.id depart_flight.origin%}" class="btn btn-light col-12">Edit Trip</a>
+    </div>
+</div>
 
-    {% if hotel %}
-    <p>Hotel: {{hotel}}</p>
-    {% else %}
-    <form action="/{{trip.id}}/{{depart_flight.destination}}/hotels/" method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="budget" value="{{trip.budget}}">
-        <input type="submit" value="Add Hotel" class="btn btn-primary">
-    </form>
-    {% endif %}
- 
-<!-- {% else %}
-<form action="/{{trip.id}}/{{trip.origin}}/flights/" method="POST">
-    {% csrf_token %}
-    <input type="hidden" name="budget" value="{{trip.budget}}">
-    <input type="hidden" name="departure_date" value="{{trip.departure_date}}">
-    <input type="submit" value="Add Departing Flight" class="btn btn-primary">
-</form> 
-{% endif %} -->
-<br>
-<a href="{% url 'delete_trip' trip.id depart_flight.origin %}" class="btn btn-danger">Delete Trip</a>
-<a href="{% url 'edit_trip' trip.id depart_flight.origin%}" class="btn btn-success">Edit Trip</a>
-<hr>
-<h2>Remaining Balance:</h2>
-{%if not return_flight and not hotel%}
-<h2> ${{trip.budget|sub:depart_flight.price}}</h2>
-{%endif%}
-{%if return_flight and not hotel%}
-<h2> ${{trip.budget|sub:depart_flight.price|sub:return_flight.price}}</h2>
-{%endif%}
-{%if return_flight and hotel %}
-<h2>${{trip.budget|sub:depart_flight.price|sub:return_flight.price|sub:hotel.price}}</h2>
-{%endif%}
-<p>Add Restaurant</p>
-<form action="" method="POST">
-    <input class="btn btn-primary" type="submit">
-</form>
-<hr>
-<p>Add Event</p>
-<form action="" method="POST">
-    <input class="btn btn-primary" type="submit">
-</form>
 {% endblock %}
