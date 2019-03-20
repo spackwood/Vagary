@@ -212,7 +212,7 @@ def trips_detail(request, trip_id, airport_code):
 #     model = Trip
 
 def trip_list(request):
-    trip = Trip.objects.all()
+    trip = Trip.objects.filter(user=request.user)
     return render(request, 'main_app/trip_list.html', {'trip_list': trip, 'iata': res})
 
 
