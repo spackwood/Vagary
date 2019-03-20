@@ -2,7 +2,7 @@
 {% block content %}
 {%for i in iata%}
         {%if i.code == airport_code %}
-        <h2 class="card-header text-center">Flights to {{i.name}}</h5>
+        <h2 class="card-header text-center">Flights to {{i.name}}</h2>
         {%endif%}
         {%endfor%}
 {% for f in flights%}
