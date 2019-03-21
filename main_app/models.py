@@ -85,4 +85,8 @@ class DressCode(models.Model):
 
     def __str__(self):
         return self.type
-    
+
+class Suitcase(models.Model):
+    item_name = models.CharField(max_length = 100)
+    quantity = models.IntegerField(default=1)
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
