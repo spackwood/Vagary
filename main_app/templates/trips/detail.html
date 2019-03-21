@@ -5,7 +5,8 @@
 <body>
     {% endblock %}
     {% block content %}
-    <div class="card col-8 offset-md-2">
+<div class = "row">
+    <div class="col-6">
         <div class="card-body text-center">
             <h1 class="card-header trip-header">{{trip.name}}</h1>
             <br>
@@ -113,41 +114,65 @@
                     {%endif%}
                 </div>
             </div>
-
             <a href="{% url 'delete_trip' trip.id depart_flight.origin %}" class="btn btn-light col-12">Delete Trip</a>
             <a href="{% url 'edit_trip' trip.id depart_flight.origin%}" class="btn btn-light col-12">Edit Trip</a>
         </div>
     </div>
-
-
-
-    <div style="background-color:aqua; width: 500px; margin: 100px auto;">
-        <h2>My Luggage</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for items in trip.suitcase_set.all %}
-                <tr>
-
-                    <td>{{items.item_name}}</td>
-                    <td>{{items.quantity}}</td>
-
-                </tr>
+    <div class = "col-4">
+        <h4 class = 'text-center'>Get Packing!</h4>
+        {% if trip_days != None %}
+        <h4 class = 'text-center'>{{trip_days}} Days & {{trip_nights}} Nights</h4>
+        {% endif %}
+        <p class = 'card-header text-center'> Clothes </p>
+        <ul>
+            {% if trip_days != None %}
+                <li>{{total_tops}} tops</li>
+                <li>{{total_bottoms}} bottoms</li>
+                <li>{{total_socks}} socks</li>
+                <li>{{total_undergarments}} undergarments</li>
+                {% for item in user.suitcase_set.all %}
+                    {% if item.quantity != 0%}
+                    <li>{{item.quantity}} {{item.item_name}}</li><a class = "btn btn-light" href = "{% url 'add_luggage_quantity' trip.id trip.origin item.id %}">+</a><a class = 'btn btn-light' href = "{% url 'subtract_luggage_quantity' trip.id trip.origin item.id %}">-</a>
+                {% endif %}
                 {% endfor %}
-
-            </tbody>
-        </table>
-        <form action="/trips/{{trip.id}}/{{trip.origin}}/add_luggage_items" method="POST">
-            {% csrf_token %}
-            {{luggage_form.as_p}}
-            <input type="submit" value="Add Items">
-        </form>
+                <form action="/trips/{{trip.id}}/{{trip.origin}}/add_luggage_items/" method="POST">
+                    {% csrf_token %}
+                    {{luggage_form.as_p}}
+                    <input type="submit" value="Add Items">
+                </form>
+            {% else %}
+                <p>Add a Return Flight to generate a suggested clothing packing list!</p>
+            {% endif %}
+        </ul>
+        <p class = 'card-header text-center'>Toiletries</p>
+        <ul>
+            <li>Toothbrush</li>
+            <li>Toothpaste</li>
+            <li>Floss</li>
+            <li>Face wash</li>
+            <li>Shampoo</li>
+            <li>Conditioner</li>
+            <li>Body wash</li>
+            <li>Deodorant</li>
+            <li>Razor</li>
+            <li>Lotion</li>
+            <li>Medications</li>
+        </ul>
+        <p class = 'card-header text-center'>For the Plane</p>
+        <ul>
+            <li>Driver's License</li>
+            <li>Passport</li>
+            <li>Wallet</li>
+            <li>Laptop + charger</li>
+            <li>Phone + charger</li>
+            <li>Tablet + charger</li>
+            <li>Headphones</li>
+            <li>Pillow</li>
+        </ul>
     </div>
+</div>
+
+
     {% endblock %}
     {% block footer %}
     <div class="card-footer text-muted">
