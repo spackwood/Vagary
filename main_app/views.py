@@ -12,6 +12,7 @@ import os
 import requests
 from datetime import datetime
 from .models import Airport, Trip, Hotel, Flight, User
+from .forms import LuggageForm
 
 # Create your views here.
 amadeus = Client(
@@ -199,13 +200,14 @@ def trips_detail(request, trip_id, airport_code):
     if depart_flight and return_flight and hotel:
        trip_days = (return_flight.departure_date - depart_flight.departure_date).days
        hotel.price = hotel.price * trip_days
-    
+    luggage_form = LuggageForm()
     return render(request, 'trips/detail.html', {
         'trip': trip,
         'hotel': hotel,
         'depart_flight': depart_flight, 
         'return_flight': return_flight,
         'iata': res,
+        'luggage_form': luggage_form,
     })
 
 # class TripList(ListView):
@@ -228,11 +230,11 @@ class TripEdit(UpdateView):
 def SaveTrip(request):
     form = request.POST
     print(form)
-    # new_trip = form.save(commit=False)
-    # Trip.flight = request.POST.get('flight','')
-    # Trip.budget = 1000
-    # Trip.name = request.POST.get('name')
-    # Trip.user = 'meisam'
 
-    # Trip.save()
-    # return redirect('destination_search')
+def add_luggage_items(request, trip_id, airport_code):
+    form = LuggageForm(request.POST)
+    if form.is_valid():
+        new_luggage = form.save(commit=False)
+        new_luggage.trip_id = trip_id
+        new_luggage.save()
+    return redirect('detail', trip_id=trip_id, airport_code=airport_code)

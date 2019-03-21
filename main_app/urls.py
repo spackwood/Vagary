@@ -17,4 +17,5 @@ urlpatterns = [
     path('trips/<int:pk>/<airport_code>/delete/', views.TripDelete.as_view(), name='delete_trip'),
     path('trips/<int:pk>/<airport_code>/edit/', views.TripEdit.as_view(), name='edit_trip'),
     path('profile/trip/', views.SaveTrip, name="save_trip"),
+    path('trips/<int:trip_id>/<airport_code>/add_luggage_items', views.add_luggage_items, name="add_luggage_items")
 ]
