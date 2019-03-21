@@ -11,7 +11,7 @@ from django.contrib.auth import authenticate, login
 import os
 import requests
 from datetime import datetime
-from .models import Airport, Trip, Hotel, Flight, User
+from .models import Trip, Hotel, Flight, User, Suitcase
 from .forms import LuggageForm
 
 # Create your views here.
@@ -63,11 +63,13 @@ def destinations(request):
     origin = request.POST.get('origin')
     d_date = request.POST.get('d_date')
     budget = float(request.POST.get('budget'))
+    
     if request.user.is_authenticated:
         trip = Trip(budget=budget, user=request.user, origin=origin)
         trip.save()
     else:
-        print('no user')
+        return redirect('login')
+
     search_list = amadeus.shopping.flight_destinations.get(
         origin=origin,
         departureDate=d_date
@@ -196,11 +198,27 @@ def trips_detail(request, trip_id, airport_code):
         hotel = Hotel.objects.get(trip=trip)
     except:
         hotel = None
+    
+    try: 
+        trip_days = (return_flight.departure_date - depart_flight.departure_date).days
+        trip_nights = trip_days - 1
+        total_tops = trip_days + 2
+        total_bottoms = trip_days - 1
+        total_socks = trip_days + 3
+        total_undergarments = trip_days + 3
+    except: 
+        trip_days = None
+        trip_nights = None
+        total_tops = None
+        total_bottoms = None
+        total_socks = None
+        total_undergarments = None
 
     if depart_flight and return_flight and hotel:
-       trip_days = (return_flight.departure_date - depart_flight.departure_date).days
        hotel.price = hotel.price * trip_days
+
     luggage_form = LuggageForm()
+
     return render(request, 'trips/detail.html', {
         'trip': trip,
         'hotel': hotel,
@@ -208,6 +226,12 @@ def trips_detail(request, trip_id, airport_code):
         'return_flight': return_flight,
         'iata': res,
         'luggage_form': luggage_form,
+        'trip_days': trip_days,
+        'trip_nights': trip_nights,
+        'total_tops': total_tops,
+        'total_bottoms': total_bottoms, 
+        'total_socks': total_socks, 
+        'total_undergarments': total_undergarments,
     })
 
 # class TripList(ListView):
@@ -233,8 +257,42 @@ def SaveTrip(request):
 
 def add_luggage_items(request, trip_id, airport_code):
     form = LuggageForm(request.POST)
-    if form.is_valid():
-        new_luggage = form.save(commit=False)
-        new_luggage.trip_id = trip_id
-        new_luggage.save()
+    item = request.POST.get('item_name')
+    print(item)
+
+    if Suitcase.objects.filter(item_name=item).exists():
+        print('item exists')
+        return redirect('detail', trip_id = trip_id, airport_code=airport_code)
+    else: 
+        if form.is_valid():
+            new_luggage = form.save(commit=False)
+            new_luggage.user = request.user
+            new_luggage.save()
+            print(new_luggage)
+        return redirect('detail', trip_id=trip_id, airport_code=airport_code)
+
+# # def add_luggage_items(request, trip_id, airport_code):
+# #     item = request.POST.get('item')
+# #     quantity = request.POST.get('quantity')
+# #     tuple = (item, quantity)
+# #     items = []
+# #     items.append(tuple)
+    
+
+# #     return redirect('detail', trip_id=trip_id, airport_code=airport_code)
+
+def add(request, trip_id, airport_code, item_id):
+    item = Suitcase.objects.get(id = item_id)
+    item.quantity = item.quantity + 1
+    item.save()
+    return redirect('detail', trip_id=trip_id, airport_code=airport_code)
+
+def subtract(request, trip_id, airport_code, item_id):
+    item = Suitcase.objects.get(id = item_id)
+    item.quantity = item.quantity - 1
+
+    if item.quantity == 0:
+        item.delete()
+    else:
+        item.save()
     return redirect('detail', trip_id=trip_id, airport_code=airport_code)
