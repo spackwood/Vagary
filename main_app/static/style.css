@@ -36,7 +36,7 @@ h1 {
 }
 
 .btn-primary {
-    background-color: #4076A9;
+    background-color: #3b7e91;
 }
 
 .btn-primary:hover {
@@ -70,7 +70,7 @@ h5 {
 }
 
 .card-header {
-    background-color: #4076A9;
+    background-color: #b4d6df;
     color: white;
     padding-bottom: 20px;
 }
@@ -91,4 +91,5 @@ span {
 
 .add {
     font-size: 20px;
+    background-color: #b4d6df;
 }

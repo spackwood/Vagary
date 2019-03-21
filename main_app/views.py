@@ -10,7 +10,7 @@ from django.views.generic import ListView, DetailView
 from django.contrib.auth import authenticate, login
 import os
 import requests
-from datetime import datetime
+from datetime import datetime, date
 from .models import Trip, Hotel, Flight, User, Suitcase
 from .forms import LuggageForm
 
@@ -24,22 +24,7 @@ res = data.json()['response']
 
 
 def home(request):
-    # response = amadeus.get('/v1/shopping/flight-destinations', origin='LAX')
-# #     print(response.data)
-#     for r in response.data:
-#         a = r['price']['total']
-#         a = float(a)
-#         if a < 300:
-#             print(
-#                 f"""FROM LAX 
-#                 \nDestination: {r['destination']} 
-#                 \tprice: {a} 
-#                 \t departure date: {r['departureDate']}
-#                   \t return date: {r['returnDate']}"""
-#                   )
-    return render(request, 'home.html', 
-    # { "flights": response.data}
-    )
+    return render(request, 'home.html')
 
 
 def signup(request):
@@ -63,35 +48,43 @@ def destinations(request):
     origin = request.POST.get('origin')
     d_date = request.POST.get('d_date')
     budget = float(request.POST.get('budget'))
+
+    check_date = datetime.strptime(d_date, '%Y-%m-%d').date()
     
     if request.user.is_authenticated:
         trip = Trip(budget=budget, user=request.user, origin=origin)
         trip.save()
     else:
         return redirect('login')
+    
+    if check_date < date.today():
+       return redirect('home')
 
-    search_list = amadeus.shopping.flight_destinations.get(
-        origin=origin,
-        departureDate=d_date
-        ).data
-    destinations = []
-    for destination in search_list:
-        d_price = float(destination['price']['total'])
-        if d_price <= budget/2:
-            destinations.append(destination)
-    return render(request, 'destinations/search.html', {
+    try:
+        search_list = amadeus.shopping.flight_destinations.get(
+            origin=origin,
+            departureDate=d_date
+            ).data
+        destinations = []
+        for destination in search_list:
+            d_price = float(destination['price']['total'])
+            if d_price <= budget/2:
+                destinations.append(destination)
+        return render(request, 'destinations/search.html', {
         'destinations': destinations, 
         'budget': budget, 'origin': origin, 
         'departure_date':d_date, 
         "trip": trip,
         'iata': res
         })
+    except: 
+        return render (request, 'error.html')
 
 def hotel_search(request, trip_id, airport_code):
     budget = float(request.POST.get('budget'))
     trip = Trip.objects.get(id=trip_id)
     hotel_search = amadeus.shopping.hotel_offers.get(cityCode=airport_code).data
-# print(json.dumps(hotel_search, indent=2))
+
     hotels = []
     for hotel in hotel_search:
         h_price = float(hotel['offers'][0]['price']['total'])
@@ -105,10 +98,7 @@ def flight_search(request, trip_id, airport_code):
     departure_date = request.POST.get('departure_date') or request.POST.get('return_date')
     trip = Trip.objects.get(id=trip_id)
 
-    # if return_date:
-    #     return_date = datetime.strptime(departure_date, '%B %d %Y').strftime('%Y-%m-%d')
-    #     flight_search = amadeus.shopping.flight_offers.get(destination=airport_code, origin=origin, departureDate=return_date).data
-    # else:
+
     flight_search = amadeus.shopping.flight_offers.get(destination=airport_code, origin=origin, departureDate=departure_date).data
     flights = []
     for flight in flight_search:
@@ -144,7 +134,6 @@ def flight_add(request, trip_id, airport_code):
         return redirect(f'/trips/{trip.id}/{airport_code}')
     else: 
         return redirect(f'/trips/{trip.id}/{origin}')
-    # return render(request, 'trip.html', {'current_flight': current_flight})
 
 def hotel_add(request, trip_id, airport_code):
     price = request.POST.get('price')
@@ -173,7 +162,7 @@ class CreateTrip(LoginRequiredMixin, CreateView):
     model = Trip
     fields = ['name', 'budget', 'origin']
     def form_valid(self, form):
-        form.instance.user = self.request.user    # Let the CreateView do its job as usual
+        form.instance.user = self.request.user   # Let the CreateView do its job as usual
         return super().form_valid(form)
 
 def trips_detail(request, trip_id, airport_code):
@@ -234,9 +223,6 @@ def trips_detail(request, trip_id, airport_code):
         'total_undergarments': total_undergarments,
     })
 
-# class TripList(ListView):
-#     model = Trip
-
 def trip_list(request):
     trip = Trip.objects.filter(user=request.user)
     return render(request, 'main_app/trip_list.html', {'trip_list': trip, 'iata': res})
@@ -249,7 +235,6 @@ class TripDelete(DeleteView):
 class TripEdit(UpdateView):
     model = Trip
     fields = ['name', 'budget']
-    # success_url = '/trips/'
 
 def SaveTrip(request):
     form = request.POST
@@ -270,16 +255,6 @@ def add_luggage_items(request, trip_id, airport_code):
             new_luggage.save()
             print(new_luggage)
         return redirect('detail', trip_id=trip_id, airport_code=airport_code)
-
-# # def add_luggage_items(request, trip_id, airport_code):
-# #     item = request.POST.get('item')
-# #     quantity = request.POST.get('quantity')
-# #     tuple = (item, quantity)
-# #     items = []
-# #     items.append(tuple)
-    
-
-# #     return redirect('detail', trip_id=trip_id, airport_code=airport_code)
 
 def add(request, trip_id, airport_code, item_id):
     item = Suitcase.objects.get(id = item_id)
